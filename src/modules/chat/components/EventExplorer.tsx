@@ -141,7 +141,7 @@ export const EventExplorer = ({ initialQuery = '', onClose, onHome, isInline }: 
                       className={`whitespace-nowrap px-6 py-2 rounded-full font-space font-medium text-xs tracking-widest uppercase transition-all border ${
                         selectedCategory === cat 
                           ? 'bg-zinc-900 dark:bg-white text-white dark:text-black border-zinc-900 dark:border-white shadow-md' 
-                          : 'bg-transparent border-zinc-200 dark:border-transparent text-zinc-500 dark:text-white/40 hover:text-zinc-900 dark:hover:text-white'
+                          : 'bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-white/60 hover:bg-white dark:hover:bg-zinc-800 hover:text-black dark:hover:text-white shadow-sm'
                       }`}
                     >
                       {cat}
