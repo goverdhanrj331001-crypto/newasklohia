@@ -1,0 +1,11 @@
+{
+  "name": "Lohia College AI Assistant",
+  "description": "The official AI assistant for Lohia College, Churu. Access exam dates, college results, and student services via voice or chat.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "AI Chat",
+    "Information Sync"
+  ]
+}
