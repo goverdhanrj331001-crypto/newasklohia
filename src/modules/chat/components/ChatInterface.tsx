@@ -18,7 +18,7 @@ import { ToppersExplorer } from './ToppersExplorer';
 import { MaterialsExplorer } from './MaterialsExplorer';
 import { NotificationsExplorer } from './NotificationsExplorer';
 import { LiveConversationModal } from './LiveConversationModal';
-import { BookOpen, Users, Calendar, Library, Trophy, MessageSquarePlus, MessageSquare, Sun, Moon, Bell, UserCircle, Settings, X, Folder } from 'lucide-react';
+import { BookOpen, Users, Calendar, Library, Trophy, MessageSquarePlus, MessageSquare, Sun, Moon, Bell, UserCircle, Settings, X, Folder, Menu, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
 import { AnimatePresence, motion } from 'motion/react';
@@ -36,78 +36,87 @@ const DesktopSidebar = ({ activeView, onAction, onProfileOpen }: { activeView: s
   ];
   const { profile, clearProfile } = useStudentProfile();
   const [showProfile, setShowProfile] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
-    <div className="hidden lg:flex flex-col w-[260px] bg-[#f9f9f9] dark:bg-[#171717] h-screen sticky top-0 shrink-0 select-none text-black dark:text-white border-r border-[#e5e5e5] dark:border-transparent transition-colors duration-300">
-      <div className="p-3 flex flex-col h-full">
+    <div className={`hidden lg:flex flex-col ${isCollapsed ? 'w-[80px]' : 'w-[260px]'} bg-[#f9f9f9] dark:bg-[#171717] h-screen sticky top-0 shrink-0 select-none text-black dark:text-white border-r border-[#e5e5e5] dark:border-transparent transition-all duration-300 z-50`}>
+      <div className={`p-3 flex flex-col h-full ${isCollapsed ? 'items-center' : ''}`}>
         {/* Logo and New Chat */}
-        <div className="flex items-center gap-3 px-3 py-2 mb-2 cursor-pointer group" onClick={() => onAction('chat')}>
-          <div className="shrink-0 flex items-center justify-center">
-            <Image
-              src="/lohia-logo.webp"
-              alt="Lohia College"
-              width={24}
-              height={24}
-              className="object-contain"
-              referrerPolicy="no-referrer"
-            />
+        <div className={`flex items-center ${isCollapsed ? 'justify-center flex-col gap-4' : 'justify-between'} px-2 py-2 mb-2`}>
+          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => onAction('chat')}>
+            <div className="shrink-0 flex items-center justify-center">
+              <Image
+                src="/lohia-logo.webp"
+                alt="Lohia College"
+                width={24}
+                height={24}
+                className="object-contain"
+                referrerPolicy="no-referrer"
+              />
+            </div>
+            {!isCollapsed && <span className="font-semibold text-base tracking-tight text-black dark:text-white">Lohia AI</span>}
           </div>
-          <span className="font-semibold text-base tracking-tight text-black dark:text-white">Lohia AI</span>
+          <button onClick={() => setIsCollapsed(!isCollapsed)} className="p-1.5 hover:bg-black/5 dark:hover:bg-[#2f2f2f] rounded-lg text-zinc-500 hover:text-black dark:hover:text-white transition-colors">
+            {isCollapsed ? <Menu className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}
+          </button>
         </div>
 
         <button
           onClick={() => onAction('chat')}
-          className="flex items-center gap-3 w-full px-3 py-2.5 mb-4 bg-transparent hover:bg-black/5 dark:hover:bg-[#2f2f2f] text-black dark:text-white rounded-lg transition-colors font-medium text-sm"
+          className={`flex items-center ${isCollapsed ? 'justify-center px-0' : 'gap-3 px-3'} w-full py-2.5 mb-4 bg-transparent hover:bg-black/5 dark:hover:bg-[#2f2f2f] text-black dark:text-white rounded-lg transition-colors font-medium text-sm`}
+          title="New Chat"
         >
           <div className="w-6 h-6 flex items-center justify-center">
             <MessageSquarePlus className="w-4 h-4" />
           </div>
-          New Chat
+          {!isCollapsed && "New Chat"}
         </button>
 
-        <div className="flex-1 overflow-y-auto">
-          <div className="text-xs text-zinc-500 dark:text-zinc-400 font-semibold mb-2 px-3 pt-2">Explorers</div>
-          <div className="space-y-1">
+        <div className={`flex-1 overflow-y-auto overflow-x-hidden ${isCollapsed ? 'no-scrollbar' : ''}`}>
+          {!isCollapsed && <div className="text-xs text-zinc-500 dark:text-zinc-400 font-semibold mb-2 px-3 pt-2">Explorers</div>}
+          <div className="space-y-1 w-full">
             {navItems.map(item => (
               <button
                 key={item.id}
+                title={item.label}
                 onClick={() => onAction(item.label === 'Chat' ? 'chat' : item.label)}
-                className={`flex items-center gap-3 w-full px-3 py-2 rounded-lg transition-colors text-sm font-medium text-left ${activeView === item.id
+                className={`flex items-center ${isCollapsed ? 'justify-center w-12 h-12 mx-auto' : 'gap-3 w-full px-3 py-2'} rounded-lg transition-colors text-sm font-medium text-left ${activeView === item.id
                   ? 'bg-black/10 dark:bg-[#2f2f2f] text-black dark:text-white'
                   : 'text-zinc-600 dark:text-zinc-300 hover:bg-black/5 dark:hover:bg-[#2f2f2f]/50 hover:text-black dark:hover:text-white'
                   }`}
               >
-                <div className="w-6 h-6 flex items-center justify-center">
-                  <item.icon className="w-4 h-4 shrink-0" />
+                <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                  <item.icon className="w-4 h-4" />
                 </div>
-                {item.label}
+                {!isCollapsed && item.label}
               </button>
             ))}
           </div>
         </div>
 
         {/* Bottom Section: Profile & Theme */}
-        <div className="mt-auto pt-4 border-t border-black/10 dark:border-[#2f2f2f] flex flex-col gap-1">
-          <div className="flex items-center gap-2 px-2 pb-2">
+        <div className={`mt-auto pt-4 border-t border-black/10 dark:border-[#2f2f2f] flex flex-col gap-1 ${isCollapsed ? 'items-center' : ''}`}>
+          <div className={`flex items-center ${isCollapsed ? 'justify-center w-12 h-12' : 'gap-2 px-2 pb-2'}`}>
             <ThemeToggle />
-            <span className="text-sm font-medium text-zinc-600 dark:text-zinc-300">Theme</span>
+            {!isCollapsed && <span className="text-sm font-medium text-zinc-600 dark:text-zinc-300">Theme</span>}
           </div>
 
-          <div className="relative">
+          <div className="relative w-full">
             <button
               onClick={() => setShowProfile(!showProfile)}
-              className="flex items-center gap-3 w-full p-2 hover:bg-black/5 dark:hover:bg-[#2f2f2f] rounded-lg transition-colors text-left"
+              title={profile ? profile.name : 'Setup Profile'}
+              className={`flex items-center ${isCollapsed ? 'justify-center w-12 h-12 mx-auto' : 'gap-3 w-full p-2'} hover:bg-black/5 dark:hover:bg-[#2f2f2f] rounded-lg transition-colors text-left`}
             >
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${profile ? 'bg-blue-600 text-white' : 'bg-zinc-200 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400'
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-xs ${profile ? 'bg-blue-600 text-white' : 'bg-zinc-200 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400'
                 }`}>
                 {profile ? profile.name?.[0] : <UserCircle className="w-5 h-5" />}
               </div>
-              <span className="text-sm font-medium text-black dark:text-white line-clamp-1">{profile ? profile.name : 'Setup Profile'}</span>
+              {!isCollapsed && <span className="text-sm font-medium text-black dark:text-white line-clamp-1">{profile ? profile.name : 'Setup Profile'}</span>}
             </button>
 
             <AnimatePresence>
               {showProfile && (
-                <div className="absolute bottom-full left-0 mb-2 w-64 z-[70] ml-2">
+                <div className={`absolute bottom-full ${isCollapsed ? 'left-full ml-4' : 'left-0 ml-2'} mb-2 w-64 z-[70]`}>
                   {profile ? (
                     <ProfileCard
                       profile={profile}
