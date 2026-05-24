@@ -227,7 +227,7 @@ const MessageItem = React.memo(({ message, isLast, onButtonClick }: { message: M
             </span>
           </div>
         )}
-        <div className="markdown-content prose dark:prose-invert dark:prose-p:text-white dark:prose-headings:text-white max-w-none prose-p:leading-relaxed prose-img:rounded-[2.5rem] prose-img:mt-6 prose-img:mb-4 prose-img:w-full prose-img:aspect-square prose-img:object-cover prose-img:border-4 prose-img:border-zinc-200 dark:prose-img:border-zinc-800 overflow-x-auto pb-2">
+        <div className="markdown-content prose dark:prose-invert prose-p:text-black dark:prose-p:text-white prose-headings:text-black dark:prose-headings:text-white prose-strong:text-black dark:prose-strong:text-white prose-li:text-black dark:prose-li:text-white max-w-none prose-p:leading-relaxed prose-img:rounded-[2.5rem] prose-img:mt-6 prose-img:mb-4 prose-img:w-full prose-img:aspect-square prose-img:object-cover prose-img:border-4 prose-img:border-zinc-200 dark:prose-img:border-zinc-800 overflow-x-auto pb-2">
           {renderContent(message.content)}
         </div>
       </div>
